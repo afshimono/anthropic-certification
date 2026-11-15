@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CCDV-F Mock Exam</title>
+<style>
+  :root{
+    --bg:#16130f; --surface:#1e1a16; --surface2:#262119; --line:#3a3229;
+    --fg:#eee6dc; --muted:#a2988c; --accent:#d97757; --ok:#5fb37a; --bad:#d9605a; --flag:#e0a62b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 ui-sans-serif,system-ui,-apple-system,sans-serif}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  header{position:fixed;inset:0 0 auto 0;height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line);z-index:10}
+  header .title{font-weight:700}
+  header .timer{font-family:ui-monospace,monospace;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+  header .timer.warn{color:var(--flag)} header .timer.crit{color:var(--bad)}
+  aside{position:fixed;top:56px;left:0;bottom:0;width:248px;background:var(--surface);border-right:1px solid var(--line);
+    overflow-y:auto;padding:20px}
+  aside h2{font-size:15px;margin:0 0 4px}
+  aside .sub{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .grid button{aspect-ratio:1;border:1px solid var(--line);background:var(--surface2);color:var(--muted);
+    border-radius:4px;font:600 11px ui-monospace,monospace;cursor:pointer;position:relative}
+  .grid button.answered{background:#2f3d33;color:#cfe6d6;border-color:#40573f}
+  .grid button.current{outline:2px solid var(--accent);color:var(--fg)}
+  .grid button.flagged::after{content:"";position:absolute;top:2px;right:2px;width:5px;height:5px;border-radius:50%;background:var(--flag)}
+  main{margin:56px 0 0 248px;padding:36px 44px;max-width:900px}
+  .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  .chip{border:1px solid var(--line);border-radius:3px;padding:3px 8px}
+  .chip.accent{color:var(--accent);border-color:var(--accent)}
+  .scenario{background:var(--surface);border-left:3px solid var(--accent);padding:14px 18px;margin:0 0 22px;border-radius:0 6px 6px 0}
+  .scenario h3{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  .scenario p{margin:0;color:var(--muted);font-size:14px}
+  .stem{font-size:17px;line-height:1.65;margin-bottom:8px}
+  .hint{font-size:12px;color:var(--flag);margin-bottom:20px}
+  .opt{display:flex;gap:14px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);
+    color:var(--fg);padding:16px 18px;border-radius:8px;margin-bottom:10px;cursor:pointer;font:inherit;transition:.12s}
+  .opt:hover{border-color:var(--muted)}
+  .opt .letter{flex:0 0 26px;height:26px;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;
+    font:700 12px ui-monospace,monospace;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:#2a1f19}
+  .opt.sel .letter{background:var(--accent);color:#16130f;border-color:var(--accent)}
+  .bar{display:flex;gap:10px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+  button.btn{background:var(--surface2);color:var(--fg);border:1px solid var(--line);padding:9px 16px;border-radius:5px;
+    font:600 12px/1 ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  button.btn:hover:not(:disabled){border-color:var(--muted)}
+  button.btn:disabled{opacity:.4;cursor:not-allowed}
+  button.btn.primary{background:var(--accent);border-color:var(--accent);color:#16130f}
+  button.btn.flagbtn.on{border-color:var(--flag);color:var(--flag)}
+  .spacer{flex:1}
+  /* results */
+  .score{font:700 44px/1 ui-monospace,monospace;color:var(--accent)}
+  .verdict{font:600 12px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;margin:8px 0 2px}
+  .verdict.pass{color:var(--ok)} .verdict.fail{color:var(--bad)}
+  table{width:100%;border-collapse:collapse;margin:22px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{font:600 10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .rev{border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:14px;background:var(--surface)}
+  .rev.correct{border-left:3px solid var(--ok)} .rev.incorrect{border-left:3px solid var(--bad)}
+  .rev .tag{font:600 10px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+  .tag.correct{color:var(--ok)} .tag.incorrect{color:var(--bad)} .tag.skipped{color:var(--muted)}
+  .rev .o{padding:10px 0;border-top:1px dashed var(--line);font-size:14px}
+  .rev .o b{font-family:ui-monospace,monospace}
+  .rev .o .why{color:var(--muted);font-size:13px;display:block;margin-top:4px}
+  .mark{font:600 10px ui-monospace,monospace;letter-spacing:.06em;padding:1px 6px;border-radius:3px;margin-left:6px}
+  .mark.you{background:#3a2a2a;color:#e8a9a5} .mark.right{background:#233528;color:#9fd8b0}
+  .refs{margin-top:14px;font-size:13px;color:var(--muted)}
+  .refs a{color:var(--accent)}
+  .saved{position:fixed;bottom:16px;right:16px;background:var(--surface2);border:1px solid var(--line);
+    padding:10px 14px;border-radius:6px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="module">
+const EXAM_ID = '__EXAM_ID__';
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const linkify = (s) => esc(s).replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
+const app = document.getElementById('app');
+
+const [exam, blueprint] = await Promise.all([
+  fetch(`/exam/${EXAM_ID}/data`).then((r) => r.json()),
+  fetch('/blueprint').then((r) => r.json()),
+]);
+const wOf = (id) => blueprint.find((s) => s.id === id)?.weight ?? 1;
+const nameOf = (id) => { const s = blueprint.find((x) => x.id === id); return s ? `${s.id} ${s.name}` : (id ?? '—'); };
+const domOf = (id) => blueprint.find((s) => s.id === id)?.domainId ?? '—';
+
+const Q = exam.questions;
+const state = {
+  i: 0,
+  picks: Q.map(() => []),          // letters chosen per question
+  flags: Q.map(() => false),
+  dwell: Q.map(() => 0),
+  startedAt: new Date().toISOString(),
+  lastTick: Date.now(),
+  endsAt: Date.now() + (exam.minutes ?? Math.max(5, Math.ceil(Q.length * 2))) * 60000,
+  done: false,
+};
+
+const fmt = (ms) => {
+  const s = Math.max(0, Math.round(ms / 1000));
+  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+};
+const nSel = (q) => q.selectCount ?? q.options.filter((o) => o.correct).length ?? 1;
+const isRight = (q, picks) => {
+  const right = q.options.filter((o) => o.correct).map((o) => o.letter).sort().join('');
+  return picks.length > 0 && picks.slice().sort().join('') === right;
+};
+
+function accrue() {
+  const now = Date.now();
+  state.dwell[state.i] += now - state.lastTick;
+  state.lastTick = now;
+}
+
+function pick(letter) {
+  const q = Q[state.i];
+  const cur = state.picks[state.i];
+  const limit = nSel(q);
+  if (limit === 1) state.picks[state.i] = cur[0] === letter ? [] : [letter];
+  else if (cur.includes(letter)) state.picks[state.i] = cur.filter((l) => l !== letter);
+  else if (cur.length < limit) state.picks[state.i] = [...cur, letter];
+  else state.picks[state.i] = [...cur.slice(1), letter];
+  render();
+}
+
+function go(i) { accrue(); state.i = Math.max(0, Math.min(Q.length - 1, i)); render(); }
+
+function render() {
+  if (state.done) return;
+  const q = Q[state.i];
+  const limit = nSel(q);
+  const picks = state.picks[state.i];
+  const answered = state.picks.filter((p) => p.length).length;
+
+  app.replaceChildren($(`
+  <div>
+    <header>
+      <div class="title">${esc(exam.title ?? 'CCDV-F Mock Exam')}</div>
+      <div><span class="mono" style="color:var(--muted);font-size:11px">TIME REMAINING: </span><span class="timer" id="timer">--:--</span></div>
+    </header>
+    <aside>
+      <h2>Exam Navigator</h2>
+      <div class="sub">${Q.length - answered} unanswered</div>
+      <div class="grid">
+        ${Q.map((_, n) => `<button data-go="${n}" class="${state.picks[n].length ? 'answered' : ''} ${n === state.i ? 'current' : ''} ${state.flags[n] ? 'flagged' : ''}">${n + 1}</button>`).join('')}
+      </div>
+      <div style="margin-top:20px"><button class="btn primary" id="submit" style="width:100%">Submit exam</button></div>
+    </aside>
+    <main>
+      <div class="meta">
+        <span class="chip accent">Question ${String(state.i + 1).padStart(2, '0')} of ${Q.length}</span>
+        <span class="chip">${esc(domOf(q.subskill))} · ${esc(nameOf(q.subskill))}</span>
+        ${q.tags ? `<span class="chip">${esc(q.tags)}</span>` : ''}
+      </div>
+      ${q.scenario ? `<div class="scenario"><h3>Scenario</h3><p>${esc(q.scenario)}</p></div>` : ''}
+      <div class="stem">${esc(q.stem)}</div>
+      <div class="hint">${limit > 1 ? `Select ${limit} responses.` : 'Select one response.'}</div>
+      <div id="opts">
+        ${q.options.map((o) => `
+          <button class="opt ${picks.includes(o.letter) ? 'sel' : ''}" data-pick="${o.letter}">
+            <span class="letter">${o.letter}</span><span>${esc(o.text)}</span>
+          </button>`).join('')}
+      </div>
+      <div class="bar">
+        <button class="btn" id="prev" ${state.i === 0 ? 'disabled' : ''}>Previous</button>
+        <button class="btn" id="next" ${state.i === Q.length - 1 ? 'disabled' : ''}>Next</button>
+        <div class="spacer"></div>
+        <button class="btn flagbtn ${state.flags[state.i] ? 'on' : ''}" id="flag">${state.flags[state.i] ? 'Flagged' : 'Flag'}</button>
+      </div>
+    </main>
+  </div>`));
+
+  app.querySelectorAll('[data-pick]').forEach((b) => b.onclick = () => pick(b.dataset.pick));
+  app.querySelectorAll('[data-go]').forEach((b) => b.onclick = () => go(+b.dataset.go));
+  app.querySelector('#prev').onclick = () => go(state.i - 1);
+  app.querySelector('#next').onclick = () => go(state.i + 1);
+  app.querySelector('#flag').onclick = () => { state.flags[state.i] = !state.flags[state.i]; render(); };
+  app.querySelector('#submit').onclick = () => {
+    const left = Q.length - state.picks.filter((p) => p.length).length;
+    if (left && !confirm(`${left} question${left > 1 ? 's' : ''} unanswered. Submit anyway?`)) return;
+    submit('manual');
+  };
+  tick();
+}
+
+function tick() {
+  const el = document.getElementById('timer');
+  if (!el || state.done) return;
+  const left = state.endsAt - Date.now();
+  el.textContent = fmt(left);
+  el.className = 'timer' + (left < 60000 ? ' crit' : left < 300000 ? ' warn' : '');
+  if (left <= 0) submit('timeout');
+}
+setInterval(() => { if (!state.done) tick(); }, 1000);
+
+async function submit(reason) {
+  accrue();
+  state.done = true;
+
+  const questions = Q.map((q, n) => {
+    const picks = state.picks[n];
+    const correct = isRight(q, picks);
+    return {
+      number: n + 1,
+      questionId: q.id ?? null,
+      subskillId: q.subskill ?? null,
+      mapping: 'native',
+      tags: q.tags ?? null,
+      scenario: q.scenario ?? null,
+      status: !picks.length ? 'SKIPPED' : correct ? 'CORRECT' : 'INCORRECT',
+      correct,
+      skipped: !picks.length,
+      selectCount: nSel(q),
+      stem: q.stem,
+      options: q.options.map((o) => ({
+        letter: o.letter, text: o.text, rationale: o.rationale ?? null,
+        chosen: picks.includes(o.letter), correct: !!o.correct,
+      })),
+      chosen: picks.join('') || null,
+      answer: q.options.filter((o) => o.correct).map((o) => o.letter).join(''),
+      correctRationale: q.options.filter((o) => o.correct).map((o) => o.rationale).filter(Boolean).join(' ') || null,
+      chosenRationale: q.options.filter((o) => picks.includes(o.letter)).map((o) => o.rationale).filter(Boolean).join(' ') || null,
+      refs: q.refs ?? [],
+      flagged: state.flags[n],
+      timeMs: state.dwell[n],
+    };
+  });
+
+  const wTot = questions.reduce((s, q) => s + wOf(q.subskillId), 0);
+  const wGot = questions.reduce((s, q) => s + (q.correct ? wOf(q.subskillId) : 0), 0);
+  const scaled = Math.round((wGot / (wTot || 1)) * 1000);
+  const nCorrect = questions.filter((q) => q.correct).length;
+
+  const attempt = {
+    source: `local-mock:${EXAM_ID}`,
+    examCode: 'CCDV-F',
+    targetExam: 'CCDV-F',
+    mapped: false,
+    url: location.href,
+    startedAt: state.startedAt,
+    finishedAt: new Date().toISOString(),
+    submitReason: reason,
+    score: {
+      scaled, passed: scaled >= 720, correct: nCorrect, total: Q.length,
+      percent: Math.round((nCorrect / Q.length) * 100), passMark: 720,
+    },
+    nativeDomains: [],
+    questions,
+    warnings: [],
+  };
+
+  let saved = true;
+  try {
+    await fetch('/attempt', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(attempt) });
+  } catch { saved = false; }
+  results(attempt, saved);
+}
+
+function results(a, saved) {
+  const byDomain = {};
+  for (const q of a.questions) {
+    const d = domOf(q.subskillId);
+    (byDomain[d] ??= { correct: 0, total: 0 });
+    byDomain[d].total++;
+    if (q.correct) byDomain[d].correct++;
+  }
+
+  app.replaceChildren($(`
+  <div>
+    <header><div class="title">${esc(a.source)}</div><div class="mono" style="font-size:11px;color:var(--muted)">RESULTS</div></header>
+    <main style="margin-left:0;max-width:940px;margin-inline:auto">
+      <div class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--muted)">EXAM RESULTS</div>
+      <div class="score">${a.score.scaled} / 1000</div>
+      <div class="verdict ${a.score.passed ? 'pass' : 'fail'}">${a.score.passed ? 'PASSED' : 'NOT PASSED'}</div>
+      <div style="color:var(--muted);font-size:14px">${a.score.correct} of ${a.score.total} correct (${a.score.percent}%) · Pass mark: 720${a.submitReason === 'timeout' ? ' · auto-submitted on time expiry' : ''}</div>
+
+      <table>
+        <tr><th>Domain</th><th>Correct</th><th>%</th></tr>
+        ${Object.entries(byDomain).sort().map(([d, v]) => `<tr><td>${esc(d)}</td><td>${v.correct}/${v.total}</td><td>${Math.round((v.correct / v.total) * 100)}%</td></tr>`).join('')}
+      </table>
+
+      <h2 style="font-size:16px;margin:30px 0 14px">Question-by-question review</h2>
+      ${a.questions.map((q) => `
+        <div class="rev ${q.correct ? 'correct' : 'incorrect'}">
+          <div class="tag ${q.status.toLowerCase()}">Q${String(q.number).padStart(2, '0')} · ${esc(nameOf(q.subskillId))} · ${q.status}</div>
+          <div style="margin:10px 0 4px">${esc(q.stem)}</div>
+          ${q.options.map((o) => `
+            <div class="o"><b>${o.letter}</b> ${esc(o.text)}
+              ${o.chosen ? '<span class="mark you">your answer</span>' : ''}
+              ${o.correct ? '<span class="mark right">correct answer</span>' : ''}
+              ${o.rationale ? `<span class="why">${esc(o.rationale)}</span>` : ''}
+            </div>`).join('')}
+          ${q.refs?.length ? `<div class="refs"><b class="mono" style="font-size:10px;letter-spacing:.1em">WHERE THIS COMES FROM</b><br>${q.refs.map((r) => linkify(r)).join('<br>')}</div>` : ''}
+          <div class="refs">Time on question: ${fmt(q.timeMs)}${q.flagged ? ' · flagged' : ''}</div>
+        </div>`).join('')}
+      <div style="height:60px"></div>
+    </main>
+    <div class="saved">${saved ? '✔ attempt saved — the report is being written' : '⚠ could not reach the local server; attempt not saved'}</div>
+  </div>`));
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+{
+  "id": "ext-developer-mock-2",
+  "title": "Amey Thakur's mock-2 set — developer-foundations",
+  "minutes": 30,
+  "external": true,
+  "attribution": {
+    "source": "https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS",
+    "path": "developer-foundations/ · question-bank.json",
+    "author": "Amey Thakur",
+    "license": "MIT",
+    "notice": "See mocks/exams/ATTRIBUTION.md for the full licence text."
+  },
+  "notes": "Imported verbatim from https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS (MIT). Sub-skills were resolved from each question's domain label, so attribution within a domain is indicative. Single-answer, four-option items only.",
+  "questions": [
+    {
+      "id": "developer-foundations-mock2-1",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "A service sends the same 8,000-token system prompt on every request and cost is dominated by input tokens. What is the first change to evaluate?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Rewriting the system prompt to be shorter",
+          "correct": false,
+          "rationale": "Shortening sacrifices capability, a cheaper model trades quality, and fewer requests changes the product"
+        },
+        {
+          "letter": "B",
+          "text": "Switching to a cheaper model",
+          "correct": false,
+          "rationale": "Shortening sacrifices capability, a cheaper model trades quality, and fewer requests changes the product"
+        },
+        {
+          "letter": "C",
+          "text": "Caching the stable prefix so it is not reprocessed on every call",
+          "correct": true,
+          "rationale": "A large unchanging prefix repeated per call is what caching addresses, without losing any instruction."
+        },
+        {
+          "letter": "D",
+          "text": "Reducing the number of requests",
+          "correct": false,
+          "rationale": "Shortening sacrifices capability, a cheaper model trades quality, and fewer requests changes the product"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-2",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "An endpoint must return within 500 ms but the model needs longer for a good answer. What is the appropriate pattern?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Return an acknowledgement immediately and deliver the result through a callback or poll",
+          "correct": true,
+          "rationale": "Decoupling acceptance from completion satisfies the latency contract without degrading the answer."
+        },
+        {
+          "letter": "B",
+          "text": "Truncate the model's output",
+          "correct": false,
+          "rationale": "Truncation and a minimal model sacrifice the result, and the timeout is the stated constraint"
+        },
+        {
+          "letter": "C",
+          "text": "Use the smallest model regardless of quality",
+          "correct": false,
+          "rationale": "Truncation and a minimal model sacrifice the result, and the timeout is the stated constraint"
+        },
+        {
+          "letter": "D",
+          "text": "Increase the timeout on the client",
+          "correct": false,
+          "rationale": "Truncation and a minimal model sacrifice the result, and the timeout is the stated constraint"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-3",
+      "subskill": "2.3",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "What does a stop reason indicating the maximum token limit tell you?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The input was too long",
+          "correct": false,
+          "rationale": "An oversized input fails before generation, and neither a malformed request nor a refusal produces this reason"
+        },
+        {
+          "letter": "B",
+          "text": "The request was malformed",
+          "correct": false,
+          "rationale": "An oversized input fails before generation, and neither a malformed request nor a refusal produces this reason"
+        },
+        {
+          "letter": "C",
+          "text": "The model refused the request",
+          "correct": false,
+          "rationale": "An oversized input fails before generation, and neither a malformed request nor a refusal produces this reason"
+        },
+        {
+          "letter": "D",
+          "text": "The output was cut off before the model finished",
+          "correct": true,
+          "rationale": "That stop reason reports that generation hit the output ceiling."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-4",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "A tool result returns 50,000 tokens of JSON, most of it unused. What is the right fix?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Raise the model's context limit",
+          "correct": false,
+          "rationale": "A larger window delays the problem, a second call adds cost and failure surface, and calling less often does not change the payload"
+        },
+        {
+          "letter": "B",
+          "text": "Change the tool to return only the fields the task needs",
+          "correct": true,
+          "rationale": "Tools should return what the task requires, which preserves context for reasoning."
+        },
+        {
+          "letter": "C",
+          "text": "Summarise the JSON with a second model call",
+          "correct": false,
+          "rationale": "A larger window delays the problem, a second call adds cost and failure surface, and calling less often does not change the payload"
+        },
+        {
+          "letter": "D",
+          "text": "Call the tool less frequently",
+          "correct": false,
+          "rationale": "A larger window delays the problem, a second call adds cost and failure surface, and calling less often does not change the payload"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-5",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "Which condition warrants a retry with backoff rather than surfacing an error?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The request contained an invalid parameter",
+          "correct": false,
+          "rationale": "An invalid parameter will fail identically, and disagreement or length are not transport failures"
+        },
+        {
+          "letter": "B",
+          "text": "The service returned a rate limit or a transient server error",
+          "correct": true,
+          "rationale": "Rate limits and transient server errors are the recoverable class."
+        },
+        {
+          "letter": "C",
+          "text": "The model returned an answer you disagree with",
+          "correct": false,
+          "rationale": "An invalid parameter will fail identically, and disagreement or length are not transport failures"
+        },
+        {
+          "letter": "D",
+          "text": "The response exceeded the expected length",
+          "correct": false,
+          "rationale": "An invalid parameter will fail identically, and disagreement or length are not transport failures"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-6",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "A workload runs nightly over 50,000 records with no interactive requirement. Which choice reduces cost most?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Streaming each request",
+          "correct": false,
+          "rationale": "Streaming serves interactive use, the largest model raises cost, and concurrency does not change unit price"
+        },
+        {
+          "letter": "B",
+          "text": "Using the largest model for accuracy",
+          "correct": false,
+          "rationale": "Streaming serves interactive use, the largest model raises cost, and concurrency does not change unit price"
+        },
+        {
+          "letter": "C",
+          "text": "Increasing concurrency against the standard endpoint",
+          "correct": false,
+          "rationale": "Streaming serves interactive use, the largest model raises cost, and concurrency does not change unit price"
+        },
+        {
+          "letter": "D",
+          "text": "Submitting the work as a batch",
+          "correct": true,
+          "rationale": "Large, uniform, latency-tolerant work is exactly the batch case, and it is materially cheaper."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-7",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "Accuracy on a simple extraction task is identical between a small and a large model. What should be deployed?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The small model, since it meets the requirement at lower cost",
+          "correct": true,
+          "rationale": "Where the requirement is met, the cheaper option is correct, and changing inputs are handled by re-evaluating."
+        },
+        {
+          "letter": "B",
+          "text": "The large model, in case inputs change",
+          "correct": false,
+          "rationale": "Insurance against hypothetical change, alternation, and recency all spend without benefit"
+        },
+        {
+          "letter": "C",
+          "text": "Both, alternating between them",
+          "correct": false,
+          "rationale": "Insurance against hypothetical change, alternation, and recency all spend without benefit"
+        },
+        {
+          "letter": "D",
+          "text": "The newest model available",
+          "correct": false,
+          "rationale": "Insurance against hypothetical change, alternation, and recency all spend without benefit"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-8",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "A task requires the model to plan across many interacting constraints and revise as it goes. What does this argue for?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The smallest model, to keep cost down",
+          "correct": false,
+          "rationale": "A small model and splitting both fragment the reasoning, and prompt length does not add capability"
+        },
+        {
+          "letter": "B",
+          "text": "Splitting the task across several small models",
+          "correct": false,
+          "rationale": "A small model and splitting both fragment the reasoning, and prompt length does not add capability"
+        },
+        {
+          "letter": "C",
+          "text": "A more capable model, since the work is reasoning-heavy",
+          "correct": true,
+          "rationale": "Multi-step reasoning under interacting constraints is where capability differences show."
+        },
+        {
+          "letter": "D",
+          "text": "A longer prompt with the same model",
+          "correct": false,
+          "rationale": "A small model and splitting both fragment the reasoning, and prompt length does not add capability"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-9",
+      "subskill": "1.2",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "An agent is given ten tools, three of which overlap in purpose. What is the likely consequence?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Faster execution, since more options are available",
+          "correct": false,
+          "rationale": "Overlap does not improve speed, reduce cost, or help error handling"
+        },
+        {
+          "letter": "B",
+          "text": "Lower token cost",
+          "correct": false,
+          "rationale": "Overlap does not improve speed, reduce cost, or help error handling"
+        },
+        {
+          "letter": "C",
+          "text": "Better error handling",
+          "correct": false,
+          "rationale": "Overlap does not improve speed, reduce cost, or help error handling"
+        },
+        {
+          "letter": "D",
+          "text": "More frequent wrong tool selection",
+          "correct": true,
+          "rationale": "Overlapping tools make selection ambiguous, which is where agents go wrong."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-10",
+      "subskill": "1.2",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "What should terminate an agent loop?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A fixed wall-clock timeout only",
+          "correct": false,
+          "rationale": "A timeout alone does not recognize success, the model's own judgment is not a guarantee, and exhausting context is a failure rather than a termination"
+        },
+        {
+          "letter": "B",
+          "text": "The model deciding it is finished",
+          "correct": false,
+          "rationale": "A timeout alone does not recognize success, the model's own judgment is not a guarantee, and exhausting context is a failure rather than a termination"
+        },
+        {
+          "letter": "C",
+          "text": "An explicit success condition, with a step ceiling as a backstop",
+          "correct": true,
+          "rationale": "A defined success condition ends the loop correctly, and the ceiling bounds the failure case."
+        },
+        {
+          "letter": "D",
+          "text": "Running out of context",
+          "correct": false,
+          "rationale": "A timeout alone does not recognize success, the model's own judgment is not a guarantee, and exhausting context is a failure rather than a termination"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-11",
+      "subskill": "6.2",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "Where should a stable instruction that must apply to every turn be placed?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "At the end of the latest user message",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "In the system prompt",
+          "correct": true,
+          "rationale": "The system prompt is designed for persistent framing across the exchange."
+        },
+        {
+          "letter": "C",
+          "text": "Repeated in each user message",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "In a tool description",
+          "correct": false,
+          "rationale": "Placing it in user turns (A, C) mixes configuration with input, and tool descriptions govern tool selection"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-12",
+      "subskill": "6.2",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "Which change most improves output that is correct but inconsistently formatted?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Providing an example of the exact output required",
+          "correct": true,
+          "rationale": "An example defines the target unambiguously, which is what formatting consistency needs."
+        },
+        {
+          "letter": "B",
+          "text": "Raising the temperature",
+          "correct": false,
+          "rationale": "Higher temperature increases variance, a vague adjective does not specify, and a larger model does not know your format"
+        },
+        {
+          "letter": "C",
+          "text": "Asking for the output to be neat",
+          "correct": false,
+          "rationale": "Higher temperature increases variance, a vague adjective does not specify, and a larger model does not know your format"
+        },
+        {
+          "letter": "D",
+          "text": "Using a larger model",
+          "correct": false,
+          "rationale": "Higher temperature increases variance, a vague adjective does not specify, and a larger model does not know your format"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-13",
+      "subskill": "8.1",
+      "tags": "TOOLS AND MCPS",
+      "stem": "What is the most important property of a tool description?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "It states what the tool does, when to use it, and what each parameter means",
+          "correct": true,
+          "rationale": "The description is the model's only basis for choosing and calling the tool correctly."
+        },
+        {
+          "letter": "B",
+          "text": "It is short",
+          "correct": false,
+          "rationale": "Brevity is secondary to clarity, and implementation detail and naming do not guide selection"
+        },
+        {
+          "letter": "C",
+          "text": "It lists the implementation language",
+          "correct": false,
+          "rationale": "Brevity is secondary to clarity, and implementation detail and naming do not guide selection"
+        },
+        {
+          "letter": "D",
+          "text": "It matches the function name exactly",
+          "correct": false,
+          "rationale": "Brevity is secondary to clarity, and implementation detail and naming do not guide selection"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-14",
+      "subskill": "7.1",
+      "tags": "SECURITY AND SAFETY",
+      "stem": "Content retrieved from an external site contains instructions aimed at the model. What is the correct defense?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Instruct the model in the system prompt to ignore such content",
+          "correct": false,
+          "rationale": "Prompt instructions and phrase filters are bypassable, and context size is irrelevant"
+        },
+        {
+          "letter": "B",
+          "text": "Treat retrieved content as untrusted data and bound the model's permissions outside the prompt",
+          "correct": true,
+          "rationale": "The durable control is that the model cannot exceed its granted permissions regardless of what the content says."
+        },
+        {
+          "letter": "C",
+          "text": "Scan for known injection phrases and block them",
+          "correct": false,
+          "rationale": "Prompt instructions and phrase filters are bypassable, and context size is irrelevant"
+        },
+        {
+          "letter": "D",
+          "text": "Use a model with a larger context window",
+          "correct": false,
+          "rationale": "Prompt instructions and phrase filters are bypassable, and context size is irrelevant"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock2-15",
+      "subskill": "4.1",
+      "tags": "EVAL, TESTING, AND DEBUGGING",
+      "stem": "A prompt change improved results on the five examples you tested. What should happen before it reaches production?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Ship it, since all five improved",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Ask the model to compare the two prompts",
+          "correct": false,
+          "rationale": "Self-comparison is not measurement, and shipping first (A, D) makes users the test"
+        },
+        {
+          "letter": "C",
+          "text": "Evaluate it against a held-out set that reflects real inputs, on defined criteria",
+          "correct": true,
+          "rationale": "Five hand-picked cases cannot separate a real gain from noise, which is what an evaluation set settles."
+        },
+        {
+          "letter": "D",
+          "text": "Ship it to a small percentage of traffic and watch error rates",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    }
+  ]
+}

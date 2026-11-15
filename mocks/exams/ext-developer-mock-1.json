@@ -1,0 +1,571 @@
+{
+  "id": "ext-developer-mock-1",
+  "title": "Amey Thakur's mock-1 set — developer-foundations",
+  "minutes": 30,
+  "external": true,
+  "attribution": {
+    "source": "https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS",
+    "path": "developer-foundations/ · question-bank.json",
+    "author": "Amey Thakur",
+    "license": "MIT",
+    "notice": "See mocks/exams/ATTRIBUTION.md for the full licence text."
+  },
+  "notes": "Imported verbatim from https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS (MIT). Sub-skills were resolved from each question's domain label, so attribution within a domain is indicative. Single-answer, four-option items only.",
+  "questions": [
+    {
+      "id": "developer-foundations-mock1-1",
+      "subskill": "1.2",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "Your service makes a Messages API call and the response carries stop_reason \"end_turn\" with a tool_use block absent. What does your loop do?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Treat the turn as complete and return the content to the caller",
+          "correct": true,
+          "rationale": "\"end_turn\" means the model has finished; \"tool_use\" is the signal to execute a tool and continue the loop"
+        },
+        {
+          "letter": "B",
+          "text": "Execute the last requested tool again",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Re-send the request with higher max_tokens",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "Append an empty tool result and continue the loop",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-2",
+      "subskill": "2.3",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "A nightly job enriches 200,000 product descriptions. Results are consumed the next morning. Which design minimizes cost?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Synchronous calls fanned out across many workers",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "The Message Batches API with results collected within its processing window",
+          "correct": true,
+          "rationale": "Latency-tolerant bulk work is the Batches API's purpose: 50% of the cost within a 24-hour window"
+        },
+        {
+          "letter": "C",
+          "text": "Synchronous calls with a smaller model and reduced max_tokens",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "One request containing all descriptions",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-3",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "Which change makes a repeated 10,000-token system prompt cheaper and faster without losing content?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Moving the prompt to the end of the request",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Compressing the prompt text with abbreviations",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Placing the stable prompt first and enabling prompt caching so the prefix is reused",
+          "correct": true,
+          "rationale": "Caching reuses a stable prefix, cutting time-to-first-token and per-request cost. Position matters: stable content first"
+        },
+        {
+          "letter": "D",
+          "text": "Sending the prompt only on the first request of a session",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-4",
+      "subskill": "6.2",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "Your extraction endpoint occasionally receives JSON with a missing required field, and downstream code throws. What is the sturdiest production pattern?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Wrap the parse in a try block and return an empty object on failure",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Instruct the model more firmly in the system prompt",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Post-process with a regular expression that inserts missing fields",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "Enforce a schema through tool use, validate the parsed result, and retry once with the validation error appended",
+          "correct": true,
+          "rationale": "Schema enforcement plus a validation-retry loop treats model output as untrusted input and lets the model self-correct"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-5",
+      "subskill": "1.3",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "A teammate proposes an autonomous agent for a pipeline whose five steps are identical for every input. What is the strongest technical objection?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A known, fixed path does not need model-chosen control flow; deterministic orchestration is cheaper, testable, and auditable",
+          "correct": true,
+          "rationale": "Autonomy is justified when the path is unknown. A fixed path belongs in deterministic code that can be tested"
+        },
+        {
+          "letter": "B",
+          "text": "Agents are unsupported in production",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Agents cannot call tools reliably",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "The pipeline would need a larger context window",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-6",
+      "subskill": "1.3",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "Which is the correct use of a subagent in an agent system?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "To run the same prompt twice for consensus",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "To isolate a self-contained subtask so its verbose intermediate context does not fill the parent's window",
+          "correct": true,
+          "rationale": "Subagents delegate and isolate context; that isolation is their main architectural value"
+        },
+        {
+          "letter": "C",
+          "text": "To bypass rate limits",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "To provide a fallback if the main model is unavailable",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-7",
+      "subskill": "7.3",
+      "tags": "SECURITY AND SAFETY",
+      "stem": "An agent that summarizes user-submitted URLs must never be able to trigger a refund. Where is that guaranteed?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "In the system prompt, stated clearly",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "By instructing the model to confirm before refunds",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "By not granting the agent the refund tool, and enforcing that with tool configuration or hooks",
+          "correct": true,
+          "rationale": "Capability the agent does not hold cannot be misused. Prompts and confirmations are not enforcement"
+        },
+        {
+          "letter": "D",
+          "text": "By using a model known for instruction following",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-8",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "Your team pins model versions in production. What is the primary reason?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Pinned models are cheaper",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Pinning increases the context window",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Pinning is required by the API",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "Model updates can change behavior, so upgrades become deliberate, evaluated changes rather than surprises",
+          "correct": true,
+          "rationale": "Pinning makes model behavior a controlled dependency so upgrades pass through evaluation"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-9",
+      "subskill": "8.2",
+      "tags": "TOOLS AND MCPS",
+      "stem": "Which describes the correct relationship between an MCP server and the applications that use it?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The server exposes tools and resources that multiple clients connect to, maintained independently of any one application",
+          "correct": true,
+          "rationale": "An MCP server is a reusable, independently maintained capability that multiple clients share"
+        },
+        {
+          "letter": "B",
+          "text": "Each application embeds its own copy of the server code",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "The server replaces the Messages API",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "The server must run in the same process as the model",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-10",
+      "subskill": "6.1",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "A long-running assistant begins contradicting itself and forgetting recent constraints. Inspection shows the context is nearly full of verbose tool outputs. What is the correct remedy?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Increase temperature to encourage variety",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Prune and summarize tool outputs, compact history, and isolate subtasks so the working context stays lean",
+          "correct": true,
+          "rationale": "Context drift and bloat are managed by pruning, compaction, and isolation"
+        },
+        {
+          "letter": "C",
+          "text": "Repeat the system prompt after every turn",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "Reduce max_tokens on each response",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-11",
+      "subskill": "6.1",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "When is few-shot prompting the right tool?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "When the model needs more factual knowledge",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "When latency must be reduced",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "When output format or edge-case handling is inconsistent and examples can demonstrate the target behavior",
+          "correct": true,
+          "rationale": "Few-shot examples fix format and edge-case behavior far better than more instructions"
+        },
+        {
+          "letter": "D",
+          "text": "When the context window is too small",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-12",
+      "subskill": "7.1",
+      "tags": "SECURITY AND SAFETY",
+      "stem": "A page retrieved by your agent contains hidden text instructing it to reveal its system prompt. Which mitigation actually works?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Asking the model in the system prompt to ignore such instructions",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "Raising temperature so behavior is less predictable",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "Filtering pages that contain the word \"ignore\"",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "Treating retrieved content as untrusted data, separating it from instructions, and gating sensitive capabilities behind guardrails",
+          "correct": true,
+          "rationale": "Injection defense is structural: separate untrusted content and apply least privilege to consequential tools"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-13",
+      "subskill": "2.3",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "Which statement about the Message Batches API is correct?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "It processes large asynchronous workloads at reduced cost within a processing window, correlating requests by custom_id",
+          "correct": true,
+          "rationale": "Reduced cost, asynchronous window, custom_id correlation, and no multi-turn tool calling inside a batch"
+        },
+        {
+          "letter": "B",
+          "text": "It supports multi-turn tool calling within a batch",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "It guarantees sub-second latency",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "It requires a dedicated endpoint per request",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-14",
+      "subskill": "3.1",
+      "tags": "CLAUDE CODE",
+      "stem": "Your CI pipeline runs Claude Code non-interactively and must parse its output. Which invocation fits?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Interactive mode with output piped to a file",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "The print flag with a JSON output format and a schema, so results are machine-readable and validated",
+          "correct": true,
+          "rationale": "Headless CI use means non-interactive invocation with structured, schema-validated output"
+        },
+        {
+          "letter": "C",
+          "text": "Plan mode with a human approver",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "D",
+          "text": "A wrapper that screen-scrapes the terminal",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock1-15",
+      "subskill": "4.1",
+      "tags": "EVAL, TESTING, AND DEBUGGING",
+      "stem": "Traces show your assistant reasons correctly over the documents it receives, but frequently receives documents unrelated to the question. Where is the defect?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The model, which should be upgraded",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "B",
+          "text": "The system prompt, which needs stronger accuracy language",
+          "correct": false,
+          "rationale": null
+        },
+        {
+          "letter": "C",
+          "text": "The retrieval layer that selects the documents",
+          "correct": true,
+          "rationale": "Traces localize the fault to the integration layer: correct reasoning over wrong inputs is a retrieval defect"
+        },
+        {
+          "letter": "D",
+          "text": "The output parser",
+          "correct": false,
+          "rationale": null
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    }
+  ]
+}

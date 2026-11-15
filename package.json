@@ -1,0 +1,23 @@
+{
+  "name": "claude-dev-certificate",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "description": "Practice harness and performance tracker for the Claude Certified Developer (Foundations) exam (CCDV-F)",
+  "scripts": {
+    "session": "node tools/session.mjs",
+    "serve": "node tools/serve.mjs",
+    "report": "node tools/report.mjs",
+    "history": "node tools/history.mjs",
+    "stats": "node tools/stats.mjs",
+    "test": "node --test tools/*.test.mjs",
+    "session:certsafari": "node tools/session-certsafari.mjs",
+    "session:architect": "node tools/session-certsafari.mjs --exam CCAR-F"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.1"
+  }
+}

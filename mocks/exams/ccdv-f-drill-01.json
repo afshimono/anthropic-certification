@@ -1,0 +1,182 @@
+{
+  "id": "ccdv-f-drill-01",
+  "title": "CCDV-F Drill 01 — high-weight sub-skills",
+  "minutes": 20,
+  "notes": "Written against the Claude API as of 2026-09. Weighted toward D2 (33.1%) and D5 (16.8%), the two heaviest domains. Includes one multiple-response item, which the real CCDV-F uses and the Architect mock does not.",
+  "questions": [
+    {
+      "id": "q-1-2-001",
+      "subskill": "1.2",
+      "tags": "AGENT-CONSTRUCTION / SURFACE-SELECTION",
+      "scenario": "A team is building a long-running agent that edits files, runs shell commands, and executes code. They want Anthropic to run the agent loop and host the container the tools execute in, with persisted, versioned agent configs and sessions that pin to a version.",
+      "stem": "Which surface meets those requirements with the least infrastructure the team has to own?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Claude API with the beta Tool Runner (client.beta.messages.tool_runner)", "correct": false, "rationale": "The Tool Runner supplies a harness only — it drives the request/execute/loop cycle for tools you define. It ships no built-in tools and no sandbox, and you still host the compute. It does not persist or version agent configs." },
+        { "letter": "B", "text": "Managed Agents: create an Agent config, then start Sessions that reference it", "correct": true, "rationale": "Managed Agents is the only surface that supplies both the harness and managed deployment: Anthropic runs the loop and provisions a per-session container where bash, file operations, and code execution run. Agents are persisted, versioned objects and sessions pin to a version." },
+        { "letter": "C", "text": "The Claude Agent SDK (@anthropic-ai/claude-agent-sdk)", "correct": false, "rationale": "The Agent SDK is Claude Code packaged as a library. It is batteries-included — built-in Read/Write/Edit/Bash tools, subagents, hooks — but it is still harness-only: you host and deploy it yourself, and it does not give you server-side persisted agent configs." },
+        { "letter": "D", "text": "A manual loop over POST /v1/messages that continues while stop_reason == \"tool_use\"", "correct": false, "rationale": "A manual loop supplies neither harness nor deployment. It is the right choice only when you deliberately want to own the entire control flow." }
+      ],
+      "refs": [
+        "Anthropic: Building effective agents — https://www.anthropic.com/engineering/building-effective-agents",
+        "Claude docs: Managed Agents — https://docs.claude.com/en/docs/agents-and-tools/managed-agents"
+      ]
+    },
+    {
+      "id": "q-2-3-001",
+      "subskill": "2.3",
+      "tags": "API-MECHANICS / PARALLEL-TOOL-USE",
+      "scenario": "An agent frequently receives one assistant message containing three tool_use blocks. The developer executes all three concurrently, then appends three separate user messages — one tool_result in each — before the next request. Over time the model stops issuing parallel tool calls and serialises them instead.",
+      "stem": "What is the defect, and what is the correct shape of the response?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Parallel tool use must be enabled explicitly; without disable_parallel_tool_use: false the model reverts to serial calls", "correct": false, "rationale": "Parallel tool use is on by default. `disable_parallel_tool_use` is the flag that turns it off, so there is nothing to enable here." },
+        { "letter": "B", "text": "All tool_result blocks for one assistant turn must be returned in a single user message; splitting them teaches the model that parallel calls are not honoured", "correct": true, "rationale": "Correct. One assistant message may contain multiple tool_use blocks, and every corresponding tool_result must come back in one user message. Splitting them across several user messages is a silent behavioural regression: the conversation history shows parallel calls being answered serially, and the model adapts by stopping them." },
+        { "letter": "C", "text": "Concurrent execution is the defect — tool calls in one assistant message must be executed in the order they appear", "correct": false, "rationale": "Concurrent execution is exactly what parallel tool use is for. The ordering of execution is the developer's choice; only the shape of the reply matters." },
+        { "letter": "D", "text": "Each tool_result must be sent in its own request so the model can react to results incrementally", "correct": false, "rationale": "This is the anti-pattern being described. It also wastes tokens and latency, since every extra request resends the whole history." }
+      ],
+      "refs": [
+        "Claude docs: Tool use overview — https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview"
+      ]
+    },
+    {
+      "id": "q-5-4-001",
+      "subskill": "5.4",
+      "tags": "COST-MANAGEMENT / PROMPT-CACHING / INVALIDATION",
+      "scenario": "A support assistant sends a 40,000-token knowledge base in the system prompt with cache_control set on it. The team expects a large discount but usage.cache_read_input_tokens is 0 on every request, while cache_creation_input_tokens is large every time. The system prompt is assembled as: the knowledge base, then a line reading \"Current time: {ISO timestamp}\", then the tone guidelines.",
+      "stem": "What is the root cause, and what is the minimal fix?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "The cache TTL is too short; setting ttl: \"1h\" on the cache_control block will produce hits", "correct": false, "rationale": "A longer TTL cannot help when the prefix itself changes on every request — each call writes a brand-new cache entry regardless of how long entries live. The 0 reads paired with large writes every time is the signature of invalidation, not expiry." },
+        { "letter": "B", "text": "The timestamp sits inside the cached prefix, so every request is a byte-different prefix; move volatile content after the last cache_control breakpoint", "correct": true, "rationale": "Correct. Caching is a prefix match: any byte change anywhere in the prefix invalidates everything after it. A per-request timestamp ahead of the breakpoint guarantees a miss every time. The fix is ordering — keep stable content (knowledge base, tone guidelines) first, and put volatile content after the last breakpoint." },
+        { "letter": "C", "text": "The knowledge base exceeds the maximum cacheable block size and is being silently rejected", "correct": false, "rationale": "40,000 tokens is comfortably cacheable. The minimum cacheable prefix is what is model-dependent (roughly 512–4096 tokens); prefixes that are too *short* silently fail to cache, which is the opposite problem." },
+        { "letter": "D", "text": "cache_control must be placed on the messages array rather than the system prompt", "correct": false, "rationale": "The system prompt is a normal and recommended place for a breakpoint. Render order is tools, then system, then messages, so a system-prompt breakpoint legitimately covers the tools and system content before it." }
+      ],
+      "refs": [
+        "Claude docs: Prompt caching — https://docs.claude.com/en/docs/build-with-claude/prompt-caching"
+      ]
+    },
+    {
+      "id": "q-6-1-001",
+      "subskill": "6.1",
+      "tags": "CONTEXT-ENGINEERING / CLEARING-VS-COMPACTION",
+      "scenario": "An agent runs for hundreds of turns. Its history is dominated by bulky tool results — file dumps and command output — that are irrelevant once acted on. The team wants to reclaim that space but must keep the narrative of what was decided and why.",
+      "stem": "Which mechanism fits, and how does it differ from the alternative?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Context editing with clear_tool_uses_20250919, which clears old tool results; compaction instead summarises earlier context", "correct": true, "rationale": "Correct. Context editing clears content — `clear_tool_uses_20250919` removes old tool results (optionally their inputs too, via clear_tool_inputs). That targets exactly the bulky, spent material while leaving the assistant's reasoning turns intact. Compaction is the separate feature that summarises earlier context instead of removing it." },
+        { "letter": "B", "text": "Compaction with compact_20260112, because clearing tool results would also discard the assistant's decisions", "correct": false, "rationale": "Clearing tool results does not touch assistant turns, so the decisions survive. Compaction is the better fit when the *whole* history must shrink rather than one category of block — and it requires appending response.content back so compaction blocks are preserved." },
+        { "letter": "C", "text": "Either one — clearing and compaction are two names for the same context_management strategy", "correct": false, "rationale": "They are distinct features with distinct strategy types and beta flags. Conflating them is a common error: clearing removes blocks, compaction summarises them." },
+        { "letter": "D", "text": "Neither; the only option is to truncate the messages array client-side before each request", "correct": false, "rationale": "Client-side truncation is a blunt fallback that easily severs tool_use/tool_result pairing and loses decisions. Server-side context management exists precisely so you do not have to do this by hand." }
+      ],
+      "refs": [
+        "Claude docs: Context editing — https://docs.claude.com/en/docs/build-with-claude/context-editing",
+        "Claude docs: Context windows — https://docs.claude.com/en/docs/build-with-claude/context-windows"
+      ]
+    },
+    {
+      "id": "q-2-4-001",
+      "subskill": "2.4",
+      "tags": "SE-FOUNDATIONS / ERROR-HANDLING / RETRY-POLICY",
+      "scenario": "A service wraps every Claude call in a broad catch that retries any API error five times with no delay. In production it burns quota retrying validation failures and hammers the API during rate-limit events.",
+      "stem": "Which two changes correct the retry policy? (Select 2.)",
+      "selectCount": 2,
+      "options": [
+        { "letter": "A", "text": "Retry only 408, 409, 429 and 5xx responses plus connection errors, and stop retrying 400 and 404", "correct": true, "rationale": "Correct. Only transient classes are worth retrying. A 400 (invalid request) or 404 will fail identically on every attempt, so retrying them wastes quota and hides the real bug." },
+        { "letter": "B", "text": "Apply exponential backoff, honouring the retry-after header on 429 responses", "correct": true, "rationale": "Correct. Immediate retries amplify an overload. Exponential backoff — and specifically respecting retry-after when the API supplies it — is what turns a retry storm into orderly recovery." },
+        { "letter": "C", "text": "Replace the typed exception checks with substring matching on the error message so new error kinds are caught automatically", "correct": false, "rationale": "String matching on error messages is explicitly discouraged: messages are not a stable contract. The SDKs expose typed exception classes precisely so you can branch reliably, checking most specific to least specific." },
+        { "letter": "D", "text": "Raise max_retries high enough that the client retries until the request eventually succeeds", "correct": false, "rationale": "Unbounded retries convert a transient failure into an outage of your own making, and because timeouts are themselves retried, wall-clock time can reach timeout × (max_retries + 1)." }
+      ],
+      "refs": [
+        "Claude docs: Errors — https://docs.claude.com/en/api/errors",
+        "Claude docs: Rate limits — https://docs.claude.com/en/api/rate-limits"
+      ]
+    },
+    {
+      "id": "q-6-3-001",
+      "subskill": "6.3",
+      "tags": "OUTPUT-HANDLING / STRUCTURED-OUTPUTS / PREFILL",
+      "scenario": "A pipeline needs Claude's response to be JSON matching a fixed schema. The existing code prefills the assistant turn with an opening brace to force JSON, which worked on an older model. On claude-opus-5 the request now returns a 400.",
+      "stem": "What should replace the prefill?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Set output_config.format with the JSON schema on messages.create()", "correct": true, "rationale": "Correct. Assistant prefills are rejected with a 400 on Opus 5 and the rest of the current family, and structured outputs are the supported replacement: `output_config: {format: {...}}` constrains the response to the schema. The deprecated top-level `output_format` parameter is not the one to use." },
+        { "letter": "B", "text": "Keep the prefill but move it into the system prompt as a literal opening brace", "correct": false, "rationale": "This does not restore the behaviour — the constraint came from the assistant turn, not the text of the system prompt — and it leaves the output unvalidated." },
+        { "letter": "C", "text": "Set stop_sequences to the closing brace so the model cannot exceed the object", "correct": false, "rationale": "A stop sequence truncates generation at a delimiter; it neither guarantees well-formed JSON nor validates against the schema, and it will cut the response short on any nested object." },
+        { "letter": "D", "text": "Add a tool whose input_schema is the target schema and force it with tool_choice: {type: \"tool\"}", "correct": false, "rationale": "This is a real older workaround and still works on many models, but it is the wrong answer when structured outputs exist for exactly this purpose — and forced tool_choice is itself rejected on some current models. If you do use a tool this way, `strict: true` is what makes the arguments schema-valid." }
+      ],
+      "refs": [
+        "Claude docs: Structured outputs — https://docs.claude.com/en/docs/build-with-claude/structured-outputs",
+        "Claude docs: Migrating to newer models — https://docs.claude.com/en/docs/about-claude/models/migrating"
+      ]
+    },
+    {
+      "id": "q-8-1-001",
+      "subskill": "8.1",
+      "tags": "TOOL-IMPLEMENTATION / STRICT-SCHEMA",
+      "stem": "A developer wants a guarantee that tool_use.input validates exactly against the tool's schema. Where does strict go, and what must the schema contain?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "strict: true on the tool definition, with additionalProperties: false and a required list in the schema", "correct": true, "rationale": "Correct. `strict` is a top-level field on the tool definition, alongside name, description and input_schema. The schema must set `additionalProperties: false` and declare `required` for the guarantee to hold." },
+        { "letter": "B", "text": "strict: true inside tool_choice, which applies the guarantee to whichever tool is selected", "correct": false, "rationale": "A very common misplacement. `tool_choice` controls *which* tool is called, not how its arguments are validated, and it has no strict field." },
+        { "letter": "C", "text": "strict: true nested inside input_schema next to type and properties", "correct": false, "rationale": "`strict` is a sibling of input_schema, not a JSON Schema keyword inside it. Nested there it is simply ignored." },
+        { "letter": "D", "text": "No flag is needed — tool inputs are always validated against input_schema", "correct": false, "rationale": "Without strict mode the schema guides the model but is not an enforced contract, which is why inputs should always be parsed with a real JSON parser and validated rather than string-matched." }
+      ],
+      "refs": [
+        "Claude docs: Tool use — https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview"
+      ]
+    },
+    {
+      "id": "q-2-5-001",
+      "subskill": "2.5",
+      "tags": "APPLICATION-DESIGN / BATCH-PROCESSING",
+      "scenario": "A nightly job scores 50,000 documents. It is latency-tolerant: results are needed by morning. The team currently issues 50,000 synchronous requests and is hitting rate limits.",
+      "stem": "Which design is correct, and what must the result handling account for?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Use the Message Batches API at 50% cost, poll processing_status until \"ended\", and key results by custom_id because they arrive in any order", "correct": true, "rationale": "Correct on all three counts. Batch is built for latency-tolerant bulk work and runs at half the cost; you poll `processing_status` until it reports \"ended\", then stream results. Results are not ordered, so they must be correlated by `custom_id` — never by position in the list." },
+        { "letter": "B", "text": "Use the Message Batches API, then match results to inputs by their index in the results stream", "correct": false, "rationale": "The cost and fit are right but the correlation is wrong, and this is the classic batch bug: results arrive in any order, so index-matching silently attaches scores to the wrong documents." },
+        { "letter": "C", "text": "Keep synchronous requests but add a client-side semaphore, since batch processing cannot return per-document results", "correct": false, "rationale": "Batch does return per-document results, each carrying its custom_id and a result type of succeeded, errored, canceled or expired. Throttling synchronous calls also forfeits the 50% discount for no benefit on a latency-tolerant job." },
+        { "letter": "D", "text": "Move to a single request containing all 50,000 documents to amortise overhead", "correct": false, "rationale": "This would blow past the context window, and one failure would lose the whole run. Batch exists so that each item succeeds or fails independently." }
+      ],
+      "refs": [
+        "Claude docs: Batch processing — https://docs.claude.com/en/docs/build-with-claude/batch-processing"
+      ]
+    },
+    {
+      "id": "q-4-1-001",
+      "subskill": "4.1",
+      "tags": "DEBUGGING / STOP-REASON",
+      "scenario": "A summarisation endpoint intermittently returns output that ends mid-sentence. There is no exception and no error in the logs; the handler reads response.content[0].text and returns it.",
+      "stem": "What should the handler check first, and why does nothing appear in the logs?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "stop_reason — a value of \"max_tokens\" means generation hit the cap, which is a successful HTTP 200 and therefore raises nothing", "correct": true, "rationale": "Correct. Truncation at the output cap is a normal 200 response with `stop_reason: \"max_tokens\"`. Nothing raises, so a handler that never inspects stop_reason silently serves half-finished text. The fix is to raise max_tokens (and stream if it is large) and to branch on stop_reason." },
+        { "letter": "B", "text": "stop_details — it is populated on every response and records why generation ended", "correct": false, "rationale": "`stop_details` is populated only when stop_reason is \"refusal\"; it is null for end_turn, max_tokens, tool_use and the rest. Reading it unguarded is itself a bug." },
+        { "letter": "C", "text": "usage.output_tokens against the model's context window, since truncation means the window was exceeded", "correct": false, "rationale": "This conflates two limits. The context window bounds input plus output; max_tokens is a separate per-response output ceiling, and it is the one being hit here." },
+        { "letter": "D", "text": "Nothing in the response — mid-sentence endings indicate a network truncation that only retries can fix", "correct": false, "rationale": "The response itself reports the cause. Retrying an identical request that hits the same cap reproduces the same truncation." }
+      ],
+      "refs": [
+        "Claude docs: Messages API — https://docs.claude.com/en/api/messages",
+        "Claude docs: Errors — https://docs.claude.com/en/api/errors"
+      ]
+    },
+    {
+      "id": "q-5-2-001",
+      "subskill": "5.2",
+      "tags": "TECHNICAL-FUNDAMENTALS / TOKEN-COUNTING",
+      "stem": "A team needs to know, before sending, whether an assembled request will fit the model's context window. What is the correct approach?",
+      "selectCount": 1,
+      "options": [
+        { "letter": "A", "text": "Call the token counting endpoint (messages.count_tokens) with the same model, system and messages", "correct": true, "rationale": "Correct. Token counting is a first-class endpoint (POST /v1/messages/count_tokens) and it is the only way to get an authoritative count, because it counts the request as the model will actually see it — including tools and system content — using that model's own tokenizer." },
+        { "letter": "B", "text": "Use the tiktoken library to count tokens locally and avoid the extra round trip", "correct": false, "rationale": "tiktoken implements OpenAI's tokenizers, not Claude's, so its counts are simply wrong. Tokenizers also differ between Claude generations, which is why counts must be re-baselined when migrating models." },
+        { "letter": "C", "text": "Divide the character count by four, the standard tokens-per-character ratio", "correct": false, "rationale": "A rule of thumb is fine for a rough estimate but not for a fit/no-fit decision; it drifts badly on code, JSON, and non-English text." },
+        { "letter": "D", "text": "Send the request and inspect usage.input_tokens on the response", "correct": false, "rationale": "That tells you the count only after you have paid for the call — and if the request did not fit, the call fails rather than reporting a number." }
+      ],
+      "refs": [
+        "Claude docs: Token counting — https://docs.claude.com/en/docs/build-with-claude/token-counting",
+        "Claude docs: Models overview — https://docs.claude.com/en/docs/about-claude/models/overview"
+      ]
+    }
+  ]
+}

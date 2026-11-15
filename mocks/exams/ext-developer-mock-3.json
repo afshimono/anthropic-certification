@@ -1,0 +1,571 @@
+{
+  "id": "ext-developer-mock-3",
+  "title": "Amey Thakur's mock-3 set — developer-foundations",
+  "minutes": 30,
+  "external": true,
+  "attribution": {
+    "source": "https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS",
+    "path": "developer-foundations/ · question-bank.json",
+    "author": "Amey Thakur",
+    "license": "MIT",
+    "notice": "See mocks/exams/ATTRIBUTION.md for the full licence text."
+  },
+  "notes": "Imported verbatim from https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS (MIT). Sub-skills were resolved from each question's domain label, so attribution within a domain is indicative. Single-answer, four-option items only.",
+  "questions": [
+    {
+      "id": "developer-foundations-mock3-1",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "A request fails with an authentication error after working for months. What is the most likely cause?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A transient service fault",
+          "correct": false,
+          "rationale": "A transient fault presents differently, and neither prompt length nor deprecation produces an auth error"
+        },
+        {
+          "letter": "B",
+          "text": "The prompt became too long",
+          "correct": false,
+          "rationale": "A transient fault presents differently, and neither prompt length nor deprecation produces an auth error"
+        },
+        {
+          "letter": "C",
+          "text": "A credential that expired, was rotated, or lost its permissions",
+          "correct": true,
+          "rationale": "Authentication failures point at the credential rather than the payload."
+        },
+        {
+          "letter": "D",
+          "text": "The model was deprecated",
+          "correct": false,
+          "rationale": "A transient fault presents differently, and neither prompt length nor deprecation produces an auth error"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-2",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "What is the purpose of correlating a request identifier through an integration?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "It lets a specific response be traced back to the request that produced it",
+          "correct": true,
+          "rationale": "Correlation exists for traceability, which is what debugging asynchronous or batched work depends on."
+        },
+        {
+          "letter": "B",
+          "text": "It reduces token cost",
+          "correct": false,
+          "rationale": "It does not affect cost or accuracy, and it is a design practice rather than a requirement"
+        },
+        {
+          "letter": "C",
+          "text": "It improves model accuracy",
+          "correct": false,
+          "rationale": "It does not affect cost or accuracy, and it is a design practice rather than a requirement"
+        },
+        {
+          "letter": "D",
+          "text": "It is required by the API",
+          "correct": false,
+          "rationale": "It does not affect cost or accuracy, and it is a design practice rather than a requirement"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-3",
+      "subskill": "2.5",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "An integration must handle a response that stops early because the model called a tool. What does the application do next?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Treat it as an error and retry",
+          "correct": false,
+          "rationale": "Retrying repeats the request, returning partial text discards the work, and the token limit is unrelated"
+        },
+        {
+          "letter": "B",
+          "text": "Return the partial text to the user",
+          "correct": false,
+          "rationale": "Retrying repeats the request, returning partial text discards the work, and the token limit is unrelated"
+        },
+        {
+          "letter": "C",
+          "text": "Increase the output token limit",
+          "correct": false,
+          "rationale": "Retrying repeats the request, returning partial text discards the work, and the token limit is unrelated"
+        },
+        {
+          "letter": "D",
+          "text": "Execute the tool and return its result so the model can continue",
+          "correct": true,
+          "rationale": "A tool-use stop is a handoff, and the loop continues once the result is returned."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-4",
+      "subskill": "2.4",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "Which is the strongest reason to put a queue between an application and the model?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "It makes responses more accurate",
+          "correct": false,
+          "rationale": "It does not change accuracy or token counts, and retries remain necessary"
+        },
+        {
+          "letter": "B",
+          "text": "It absorbs bursts so load stays within rate limits without dropping work",
+          "correct": true,
+          "rationale": "A queue smooths demand against a rate-limited dependency."
+        },
+        {
+          "letter": "C",
+          "text": "It reduces the token count",
+          "correct": false,
+          "rationale": "It does not change accuracy or token counts, and retries remain necessary"
+        },
+        {
+          "letter": "D",
+          "text": "It removes the need for retries",
+          "correct": false,
+          "rationale": "It does not change accuracy or token counts, and retries remain necessary"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-5",
+      "subskill": "2.6",
+      "tags": "APPLICATIONS AND INTEGRATION",
+      "stem": "A response arrives well-formed but semantically wrong for the input. Where should investigation start?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The transport layer",
+          "correct": false,
+          "rationale": "Transport, limits, and output caps produce failures of delivery rather than of meaning"
+        },
+        {
+          "letter": "B",
+          "text": "The prompt and the exact context supplied for that input",
+          "correct": true,
+          "rationale": "A well-formed but wrong answer points at what the model was told, not how it was delivered."
+        },
+        {
+          "letter": "C",
+          "text": "The rate limit configuration",
+          "correct": false,
+          "rationale": "Transport, limits, and output caps produce failures of delivery rather than of meaning"
+        },
+        {
+          "letter": "D",
+          "text": "The output token limit",
+          "correct": false,
+          "rationale": "Transport, limits, and output caps produce failures of delivery rather than of meaning"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-6",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "What is the practical consequence of choosing a model with a much larger context window than the task needs?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Better accuracy on every task",
+          "correct": false,
+          "rationale": "A larger window does not itself improve accuracy, reduce rate limiting, or make structure more reliable"
+        },
+        {
+          "letter": "B",
+          "text": "Fewer rate limit errors",
+          "correct": false,
+          "rationale": "A larger window does not itself improve accuracy, reduce rate limiting, or make structure more reliable"
+        },
+        {
+          "letter": "C",
+          "text": "More reliable structured output",
+          "correct": false,
+          "rationale": "A larger window does not itself improve accuracy, reduce rate limiting, or make structure more reliable"
+        },
+        {
+          "letter": "D",
+          "text": "Cost and latency that the task does not require",
+          "correct": true,
+          "rationale": "Unused capacity is paid for in cost and time."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-7",
+      "subskill": "5.4",
+      "tags": "MODEL SELECTION AND OPTIMIZATION",
+      "stem": "How should a team decide when to move a task to a smaller model?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "When measurement shows the smaller model meets the task's stated quality bar",
+          "correct": true,
+          "rationale": "The decision is evidence-led against a defined bar."
+        },
+        {
+          "letter": "B",
+          "text": "When the budget is exceeded",
+          "correct": false,
+          "rationale": "Budget, volume, and latency create pressure to look, but they do not establish that quality holds"
+        },
+        {
+          "letter": "C",
+          "text": "When the task becomes high volume",
+          "correct": false,
+          "rationale": "Budget, volume, and latency create pressure to look, but they do not establish that quality holds"
+        },
+        {
+          "letter": "D",
+          "text": "When latency becomes a complaint",
+          "correct": false,
+          "rationale": "Budget, volume, and latency create pressure to look, but they do not establish that quality holds"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-8",
+      "subskill": "1.2",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "A long-running agent needs to keep a decision it made twenty steps ago. What is the correct mechanism?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Rely on the context window retaining it",
+          "correct": false,
+          "rationale": "Relying on the window fails at length, temperature is unrelated, and restarting loses the decision"
+        },
+        {
+          "letter": "B",
+          "text": "Increase the temperature",
+          "correct": false,
+          "rationale": "Relying on the window fails at length, temperature is unrelated, and restarting loses the decision"
+        },
+        {
+          "letter": "C",
+          "text": "Write it into an explicit state that is carried forward regardless of compaction",
+          "correct": true,
+          "rationale": "Durable state must be explicit, because context is finite and compaction is lossy."
+        },
+        {
+          "letter": "D",
+          "text": "Restart the agent periodically",
+          "correct": false,
+          "rationale": "Relying on the window fails at length, temperature is unrelated, and restarting loses the decision"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-9",
+      "subskill": "1.2",
+      "tags": "AGENTS AND WORKFLOWS",
+      "stem": "What distinguishes a workflow from an agent in practice?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Workflows are shorter",
+          "correct": false,
+          "rationale": "Length is incidental, agents do use tools, and workflows do call the model"
+        },
+        {
+          "letter": "B",
+          "text": "Agents cannot use tools",
+          "correct": false,
+          "rationale": "Length is incidental, agents do use tools, and workflows do call the model"
+        },
+        {
+          "letter": "C",
+          "text": "Workflows cannot call the model",
+          "correct": false,
+          "rationale": "Length is incidental, agents do use tools, and workflows do call the model"
+        },
+        {
+          "letter": "D",
+          "text": "In a workflow the control flow is fixed in advance; in an agent the model chooses the next step",
+          "correct": true,
+          "rationale": "Who decides the next step is the distinction that matters."
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-10",
+      "subskill": "6.2",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "A prompt contains an instruction that contradicts an example in the same prompt. What is the likely outcome?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The instruction always wins",
+          "correct": false,
+          "rationale": "Neither the instruction nor the example reliably wins, and the request is not rejected"
+        },
+        {
+          "letter": "B",
+          "text": "The example always wins",
+          "correct": false,
+          "rationale": "Neither the instruction nor the example reliably wins, and the request is not rejected"
+        },
+        {
+          "letter": "C",
+          "text": "Behavior becomes unpredictable between the two",
+          "correct": true,
+          "rationale": "Contradictory signals produce inconsistent behavior rather than a defined precedence."
+        },
+        {
+          "letter": "D",
+          "text": "The request is rejected",
+          "correct": false,
+          "rationale": "Neither the instruction nor the example reliably wins, and the request is not rejected"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-11",
+      "subskill": "6.2",
+      "tags": "PROMPT AND CONTEXT ENGINEERING",
+      "stem": "What is the effect of placing the most important instruction in the middle of a very long prompt?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "None, position is irrelevant",
+          "correct": false,
+          "rationale": "Position is not neutral or advantageous here, and it does not error"
+        },
+        {
+          "letter": "B",
+          "text": "It is more likely to be overlooked than if it were at a boundary",
+          "correct": true,
+          "rationale": "Material at the edges of a long input is attended to more reliably than material buried in the middle."
+        },
+        {
+          "letter": "C",
+          "text": "It is followed more closely",
+          "correct": false,
+          "rationale": "Position is not neutral or advantageous here, and it does not error"
+        },
+        {
+          "letter": "D",
+          "text": "It causes an error",
+          "correct": false,
+          "rationale": "Position is not neutral or advantageous here, and it does not error"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-12",
+      "subskill": "8.1",
+      "tags": "TOOLS AND MCPS",
+      "stem": "When should a tool return an identifier rather than the full object?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "When the object is large and the model only needs it to make a subsequent call",
+          "correct": true,
+          "rationale": "Returning a handle keeps context free when the payload is only needed for a later call."
+        },
+        {
+          "letter": "B",
+          "text": "Never, the model needs the full object",
+          "correct": false,
+          "rationale": "Always returning everything or nothing ignores the task, and the rule is not about writes"
+        },
+        {
+          "letter": "C",
+          "text": "Always, to reduce cost",
+          "correct": false,
+          "rationale": "Always returning everything or nothing ignores the task, and the rule is not about writes"
+        },
+        {
+          "letter": "D",
+          "text": "Only for write operations",
+          "correct": false,
+          "rationale": "Always returning everything or nothing ignores the task, and the rule is not about writes"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-13",
+      "subskill": "8.2",
+      "tags": "TOOLS AND MCPS",
+      "stem": "An MCP server is added and the agent's success rate falls. What should be checked first?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Whether the new tools overlap with existing ones and have distinguishable descriptions",
+          "correct": true,
+          "rationale": "A new tool surface most often degrades selection through overlap and unclear descriptions."
+        },
+        {
+          "letter": "B",
+          "text": "The server's uptime",
+          "correct": false,
+          "rationale": "Uptime and latency present as errors or slowness, and the model did not change"
+        },
+        {
+          "letter": "C",
+          "text": "The model version",
+          "correct": false,
+          "rationale": "Uptime and latency present as errors or slowness, and the model did not change"
+        },
+        {
+          "letter": "D",
+          "text": "The network latency",
+          "correct": false,
+          "rationale": "Uptime and latency present as errors or slowness, and the model did not change"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-14",
+      "subskill": "7.1",
+      "tags": "SECURITY AND SAFETY",
+      "stem": "A model output will be rendered directly into a web page. What must the application do?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Nothing, model output is safe",
+          "correct": false,
+          "rationale": "Assuming safety and instructing the model are not controls, and model size is irrelevant"
+        },
+        {
+          "letter": "B",
+          "text": "Treat the output as untrusted and escape or sanitise it before rendering",
+          "correct": true,
+          "rationale": "Anything rendered into a page is escaped regardless of source, since output can be influenced by input."
+        },
+        {
+          "letter": "C",
+          "text": "Ask the model not to produce markup",
+          "correct": false,
+          "rationale": "Assuming safety and instructing the model are not controls, and model size is irrelevant"
+        },
+        {
+          "letter": "D",
+          "text": "Use a larger model",
+          "correct": false,
+          "rationale": "Assuming safety and instructing the model are not controls, and model size is irrelevant"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    },
+    {
+      "id": "developer-foundations-mock3-15",
+      "subskill": "4.1",
+      "tags": "EVAL, TESTING, AND DEBUGGING",
+      "stem": "What does a regression suite protect against that a one-off evaluation does not?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Slow responses",
+          "correct": false,
+          "rationale": "Latency, limits, and cost are operational signals rather than correctness"
+        },
+        {
+          "letter": "B",
+          "text": "Rate limits",
+          "correct": false,
+          "rationale": "Latency, limits, and cost are operational signals rather than correctness"
+        },
+        {
+          "letter": "C",
+          "text": "A change that improves the target behavior while quietly breaking another",
+          "correct": true,
+          "rationale": "Regressions are silent by definition and are caught by continuously testing what must not break."
+        },
+        {
+          "letter": "D",
+          "text": "Cost increases",
+          "correct": false,
+          "rationale": "Latency, limits, and cost are operational signals rather than correctness"
+        }
+      ],
+      "refs": [
+        "Amey Thakur — CLAUDE-CERTIFICATIONS (MIT) — https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS"
+      ],
+      "external": true
+    }
+  ]
+}

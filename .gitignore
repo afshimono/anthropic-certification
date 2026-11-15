@@ -1,0 +1,25 @@
+node_modules/
+
+# Persistent browser profile: holds your logins and bot-check cookies.
+.exam-profile/
+
+# Personal results: never push sittings or raw captures to the origin.
+data/attempts/*
+data/raw/*
+reports/*
+reviews/*
+study/*
+.chrome-profile/
+
+# Claude Code scheduled tasks and lock: local runtime state.
+.claude/scheduled_tasks.json
+.claude/scheduled_tasks.lock
+
+# Derived from your attempts (scores, trends, study plan): personal, rebuild with `npm run history`.
+HISTORY.md
+HISTORY-CCAR-F.md
+STUDY-PLAN.md
+STUDY-PLAN-CCAR-F.md
+data/history.json
+data/history-ccar-f.json
+data/performance.json
