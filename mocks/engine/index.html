@@ -83,9 +83,10 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 const linkify = (s) => esc(s).replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
 const app = document.getElementById('app');
 
-const [exam, blueprint] = await Promise.all([
-  fetch(`/exam/${EXAM_ID}/data`).then((r) => r.json()),
-  fetch('/blueprint').then((r) => r.json()),
+const exam = await fetch(`/exam/${EXAM_ID}/data`).then((r) => r.json());
+const TARGET = exam.targetExam ?? 'CCDV-F';
+const [blueprint] = await Promise.all([
+  fetch(`/blueprint?exam=${TARGET}`).then((r) => r.json()),
 ]);
 const wOf = (id) => blueprint.find((s) => s.id === id)?.weight ?? 1;
 const nameOf = (id) => { const s = blueprint.find((x) => x.id === id); return s ? `${s.id} ${s.name}` : (id ?? '—'); };
@@ -240,8 +241,8 @@ async function submit(reason) {
 
   const attempt = {
     source: `local-mock:${EXAM_ID}`,
-    examCode: 'CCDV-F',
-    targetExam: 'CCDV-F',
+    examCode: TARGET,
+    targetExam: TARGET,
     mapped: false,
     url: location.href,
     startedAt: state.startedAt,

@@ -17,7 +17,7 @@ import http from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { paths, ROOT, saveAttempt } from './lib/store.mjs';
-import { SUBSKILLS } from './lib/blueprint.mjs';
+import { SUBSKILLS, ARCH_SUBSKILLS } from './lib/blueprint.mjs';
 
 const ENGINE = path.join(ROOT, 'mocks/engine');
 
@@ -51,7 +51,7 @@ export async function startMockServer({ port = 0 } = {}) {
       }
 
       if (req.method === 'GET' && url.pathname === '/blueprint') {
-        return send(res, 200, JSON.stringify(SUBSKILLS), 'application/json');
+        return send(res, 200, JSON.stringify(url.searchParams.get('exam') === 'CCAR-F' ? ARCH_SUBSKILLS : SUBSKILLS), 'application/json');
       }
 
       let m = url.pathname.match(/^\/exam\/([\w.-]+)\/data$/);
