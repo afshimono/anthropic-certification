@@ -1,0 +1,621 @@
+{
+  "id": "ccar-f-drill-01",
+  "title": "CCAR-F Drill 01: gaps from 2026-11-18",
+  "minutes": 20,
+  "targetExam": "CCAR-F",
+  "notes": "Fresh scenarios on the sub-skills missed on 2026-11-18, weighted to repeat misses (1.4, 3.3, 2.4, 1.7, 4.1, 5.6). Single-answer, like the real CCAR-F.",
+  "questions": [
+    {
+      "id": "a-1-4-001",
+      "subskill": "1.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A support agent has a process_refund tool. Policy: refunds over $500 must have a manager approval id. Production logs show the agent occasionally skips this despite a clear system prompt.",
+      "stem": "Which change makes the guarantee hold?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Add \"NEVER refund over $500 without approval\" in bold to the system prompt and CLAUDE.md.",
+          "correct": false,
+          "rationale": "Emphasis is still a request. The model usually complies, but \"usually\" is not a guarantee."
+        },
+        {
+          "letter": "B",
+          "text": "Add three few-shot examples of the agent declining large refunds.",
+          "correct": false,
+          "rationale": "Examples shift probabilities; they do not make a path impossible."
+        },
+        {
+          "letter": "C",
+          "text": "Add a PreToolUse hook on the refund tool that reads tool_input.amount and denies calls over $500 without an approval id.",
+          "correct": true,
+          "rationale": "A hook runs in code before the tool executes, reads the real arguments, and can deny. That is enforcement."
+        },
+        {
+          "letter": "D",
+          "text": "Ask the model to double-check its refund amount before calling the tool.",
+          "correct": false,
+          "rationale": "A self-check by the same model is another instruction, not a gate."
+        }
+      ]
+    },
+    {
+      "id": "a-1-4-002",
+      "subskill": "1.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Same refund agent. You are writing the PreToolUse hook configuration.",
+      "stem": "Where should the hook matcher and the amount check each live?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Matcher: \"process_refund\"; amount check inside the hook callback reading tool_input.",
+          "correct": true,
+          "rationale": "The matcher selects by tool name; arguments are only visible to the callback."
+        },
+        {
+          "letter": "B",
+          "text": "Matcher: \"amount > 500\"; callback just returns allow.",
+          "correct": false,
+          "rationale": "Matchers match tool names, not argument values."
+        },
+        {
+          "letter": "C",
+          "text": "Matcher: \"refund\"; amount check in CLAUDE.md.",
+          "correct": false,
+          "rationale": "CLAUDE.md is context, not enforcement."
+        },
+        {
+          "letter": "D",
+          "text": "No matcher; check the amount in the next user turn.",
+          "correct": false,
+          "rationale": "Too late; the tool already ran."
+        }
+      ]
+    },
+    {
+      "id": "a-1-4-003",
+      "subskill": "1.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A billing agent must verify the customer before issuing credit. Sometimes it calls issue_credit using an id taken from the user message.",
+      "stem": "What must a gate on issue_credit enforce?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A larger max_tokens so the model has room to follow the sequence.",
+          "correct": false,
+          "rationale": "Unrelated to ordering."
+        },
+        {
+          "letter": "B",
+          "text": "A prompt line telling the model to call lookup_order first.",
+          "correct": false,
+          "rationale": "Ordering by instruction is not a guarantee."
+        },
+        {
+          "letter": "C",
+          "text": "A retry loop that re-asks the model when it skips lookup_order.",
+          "correct": false,
+          "rationale": "The credit has already been issued by then."
+        },
+        {
+          "letter": "D",
+          "text": "That lookup_order has returned a verified customer id for this conversation before issue_credit is allowed, failing closed if not.",
+          "correct": true,
+          "rationale": "Gate the dependent tool on a recorded prerequisite and deny by default."
+        }
+      ]
+    },
+    {
+      "id": "a-1-4-004",
+      "subskill": "1.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "The agent decides it cannot resolve a chargeback dispute and hands off to a human queue.",
+      "stem": "What should the escalation handoff to the human queue contain?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The full 80-turn transcript so nothing is lost.",
+          "correct": false,
+          "rationale": "Pushes the work onto the human; no actionable summary."
+        },
+        {
+          "letter": "B",
+          "text": "The ticket id, the finding so far, and the concrete action the human should take.",
+          "correct": true,
+          "rationale": "A handoff is id + finding + concrete action, so the human does not restart."
+        },
+        {
+          "letter": "C",
+          "text": "Only \"customer is upset, please help\".",
+          "correct": false,
+          "rationale": "No state, no action."
+        },
+        {
+          "letter": "D",
+          "text": "A link to the agent's system prompt.",
+          "correct": false,
+          "rationale": "Not task state."
+        }
+      ]
+    },
+    {
+      "id": "a-3-3-001",
+      "subskill": "3.3",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Test files sit next to the code they test (src/billing/invoice.ts and src/billing/invoice.test.ts). You want testing conventions loaded only when Claude works with test files.",
+      "stem": "Which rule file glob matches the stated intent?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "paths: [\"**/tests/**\"]",
+          "correct": false,
+          "rationale": "Matches a tests/ directory, not co-located *.test.ts files next to the source."
+        },
+        {
+          "letter": "B",
+          "text": "paths: [\"**/*.test.ts\", \"**/*.test.tsx\"]",
+          "correct": true,
+          "rationale": "Matches test files wherever they live, including next to the code."
+        },
+        {
+          "letter": "C",
+          "text": "paths: [\"src/**\"]",
+          "correct": false,
+          "rationale": "Matches all source, including non-test files."
+        },
+        {
+          "letter": "D",
+          "text": "No paths field; mention tests in the rule text.",
+          "correct": false,
+          "rationale": "Without paths the rule loads every session, which defeats the point."
+        }
+      ]
+    },
+    {
+      "id": "a-3-3-002",
+      "subskill": "3.3",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A 4,000-token style guide is referenced from CLAUDE.md via @docs/style.md. The team assumes it only loads when relevant.",
+      "stem": "What does importing the style guide with an @ line in CLAUDE.md do to context usage?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "It loads the file only when Claude first needs it.",
+          "correct": false,
+          "rationale": "@imports are not lazy."
+        },
+        {
+          "letter": "B",
+          "text": "It loads it only for subagents.",
+          "correct": false,
+          "rationale": "No such scoping."
+        },
+        {
+          "letter": "C",
+          "text": "It is ignored unless a paths field is present.",
+          "correct": false,
+          "rationale": "paths belongs to .claude/rules, not @imports."
+        },
+        {
+          "letter": "D",
+          "text": "It loads the file at launch together with CLAUDE.md, so it costs context in every session.",
+          "correct": true,
+          "rationale": "Imports expand at launch; the cost is paid up front."
+        }
+      ]
+    },
+    {
+      "id": "a-3-1-001",
+      "subskill": "3.1",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A team wants notes for human editors inside the shared CLAUDE.md that Claude should not read.",
+      "stem": "Which mechanism keeps maintainer notes out of Claude's context while still in the committed CLAUDE.md?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Wrap them in block-level HTML comments.",
+          "correct": true,
+          "rationale": "Block-level HTML comments are stripped before injection."
+        },
+        {
+          "letter": "B",
+          "text": "Place them under a final \"## Maintainer notes\" heading, which is skipped.",
+          "correct": false,
+          "rationale": "No section is skipped by position."
+        },
+        {
+          "letter": "C",
+          "text": "Put them in CLAUDE.local.md.",
+          "correct": false,
+          "rationale": "Personal and gitignored, so other editors never see them."
+        },
+        {
+          "letter": "D",
+          "text": "Prefix each line with \"IGNORE:\".",
+          "correct": false,
+          "rationale": "Just text, still injected."
+        }
+      ]
+    },
+    {
+      "id": "a-2-4-001",
+      "subskill": "2.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Everyone on the team needs the same ERP MCP server defined in the repo, but the API token must never be committed.",
+      "stem": "Which setup satisfies both the sharing and the secrecy requirement?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "User scope with the token written into the config.",
+          "correct": false,
+          "rationale": "Nothing reaches the repo, so the team gets no checked-in config."
+        },
+        {
+          "letter": "B",
+          "text": "Project scope with the real token, repo set to private.",
+          "correct": false,
+          "rationale": "A secret in git remains a secret in git."
+        },
+        {
+          "letter": "C",
+          "text": "Project scope .mcp.json with \"Authorization\": \"Bearer ${ERP_TOKEN}\"; each person exports ERP_TOKEN.",
+          "correct": true,
+          "rationale": "Shared via git; only the variable name is committed."
+        },
+        {
+          "letter": "D",
+          "text": "Project scope .mcp.json added to .gitignore.",
+          "correct": false,
+          "rationale": "Defeats sharing."
+        }
+      ]
+    },
+    {
+      "id": "a-1-7-001",
+      "subskill": "1.7",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A code-audit run ended with error_max_turns after reading 60 files. You want to keep the analysis done so far and just keep going.",
+      "stem": "What is the right recovery?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Fork the session and give the fork a higher max_turns.",
+          "correct": false,
+          "rationale": "Fork creates a new session for diverging, not continuing."
+        },
+        {
+          "letter": "B",
+          "text": "Re-run the original prompt as a new query with a higher max_turns.",
+          "correct": false,
+          "rationale": "Empty context; the reads and analysis are repeated."
+        },
+        {
+          "letter": "C",
+          "text": "Start a new session and paste a summary.",
+          "correct": false,
+          "rationale": "Loses the working context and invites drift."
+        },
+        {
+          "letter": "D",
+          "text": "Resume by session_id with a higher max_turns.",
+          "correct": true,
+          "rationale": "Same session, full context kept, limit raised."
+        }
+      ]
+    },
+    {
+      "id": "a-4-1-001",
+      "subskill": "4.1",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A review prompt says \"flag misleading comments only if you are very sure.\" Reviewers complain of noise and misses.",
+      "stem": "Which replacement is an explicit criterion?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Report only comments you are highly confident are wrong.",
+          "correct": false,
+          "rationale": "A confidence filter."
+        },
+        {
+          "letter": "B",
+          "text": "Report a comment only when it states a behavior the code contradicts, citing the line.",
+          "correct": true,
+          "rationale": "Two reviewers applying it get the same result."
+        },
+        {
+          "letter": "C",
+          "text": "Report comments a senior engineer would agree are misleading.",
+          "correct": false,
+          "rationale": "Subjective."
+        },
+        {
+          "letter": "D",
+          "text": "Report comments with at least 80% estimated accuracy.",
+          "correct": false,
+          "rationale": "A threshold on self-assessment."
+        }
+      ]
+    },
+    {
+      "id": "a-4-2-001",
+      "subskill": "4.2",
+      "tags": "CCAR-F DRILL",
+      "scenario": "An extraction prompt keeps inventing precise quantities when the source text is vague. Rewording the instruction twice did not help.",
+      "stem": "Which fix addresses the cause?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Make quantity nullable, with few-shot examples that map \"a couple tablets\" to a value and one where quantity is absent returning null.",
+          "correct": true,
+          "rationale": "Gives a legitimate \"not stated\" and shows both cases."
+        },
+        {
+          "letter": "B",
+          "text": "Require quantity in grams and reject non-numeric values.",
+          "correct": false,
+          "rationale": "Demands precision, creating fabrication."
+        },
+        {
+          "letter": "C",
+          "text": "Add a synonym list for quantity phrases.",
+          "correct": false,
+          "rationale": "Same lever as the instruction that already failed."
+        },
+        {
+          "letter": "D",
+          "text": "Lower temperature to 0.",
+          "correct": false,
+          "rationale": "Does not remove the incentive to fabricate."
+        }
+      ]
+    },
+    {
+      "id": "a-4-4-001",
+      "subskill": "4.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Extraction passes strict schema validation, but line items sum to $940 while order_total says $980.",
+      "stem": "What catches this?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A tighter JSON schema with min/max on each field.",
+          "correct": false,
+          "rationale": "Cannot express a relation between fields."
+        },
+        {
+          "letter": "B",
+          "text": "Retry at temperature 0 until the schema passes.",
+          "correct": false,
+          "rationale": "The schema is blind to this."
+        },
+        {
+          "letter": "C",
+          "text": "A code check that recomputes the sum and compares to order_total, retrying or routing to review on mismatch.",
+          "correct": true,
+          "rationale": "Validates meaning in code."
+        },
+        {
+          "letter": "D",
+          "text": "Ask the model to be careful with totals.",
+          "correct": false,
+          "rationale": "An instruction, not a check."
+        }
+      ]
+    },
+    {
+      "id": "a-5-6-001",
+      "subskill": "5.6",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Several research subagents feed a compression step before a synthesis agent. Reports read well, but nobody can tell which document supports which claim.",
+      "stem": "Which structure preserves provenance?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "A summary paragraph per topic plus a numbered URL list at the end.",
+          "correct": false,
+          "rationale": "A bibliography, not a claim-to-source mapping."
+        },
+        {
+          "letter": "B",
+          "text": "One record per claim: short claim text plus source URL, document name and excerpt in labelled fields on the same record.",
+          "correct": true,
+          "rationale": "The link survives any further compression."
+        },
+        {
+          "letter": "C",
+          "text": "Label each group with the subagent that found it.",
+          "correct": false,
+          "rationale": "Says who found it, not what supports it."
+        },
+        {
+          "letter": "D",
+          "text": "Drop low-confidence claims and describe evidence in prose.",
+          "correct": false,
+          "rationale": "Loses claims and the mapping."
+        }
+      ]
+    },
+    {
+      "id": "a-1-3-001",
+      "subskill": "1.3",
+      "tags": "CCAR-F DRILL",
+      "scenario": "The coordinator prompt says \"Use the data-analyst agent to summarise Q3 churn.\" The data-analyst AgentDefinition has a vague description.",
+      "stem": "What does the sentence guarantee?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Nothing; naming is a request, and the description should say when the subagent applies.",
+          "correct": true,
+          "rationale": "Claude still decides; the description remains the signal."
+        },
+        {
+          "letter": "B",
+          "text": "Delegation always happens, whatever the description says.",
+          "correct": false,
+          "rationale": "Stronger than any doc states."
+        },
+        {
+          "letter": "C",
+          "text": "Delegation, but only for subagents loaded from filesystem files.",
+          "correct": false,
+          "rationale": "Invented restriction."
+        },
+        {
+          "letter": "D",
+          "text": "Delegation once the name is matched against the description text.",
+          "correct": false,
+          "rationale": "Names are not matched that way."
+        }
+      ]
+    },
+    {
+      "id": "a-5-4-001",
+      "subskill": "5.4",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A subagent audits every use of a deprecated API across a monorepo, producing thousands of lines. The coordinator's context must stay small but it may need to inspect one chain later.",
+      "stem": "Which instruction to the subagent best fits?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Return the full transcript of every search.",
+          "correct": false,
+          "rationale": "Fills the coordinator's context."
+        },
+        {
+          "letter": "B",
+          "text": "Return only \"done\".",
+          "correct": false,
+          "rationale": "Loses the drill-down requirement."
+        },
+        {
+          "letter": "C",
+          "text": "Return a prose overview with no file paths.",
+          "correct": false,
+          "rationale": "Nothing to drill into."
+        },
+        {
+          "letter": "D",
+          "text": "Write the detail to a findings file; return a short summary plus the file path.",
+          "correct": true,
+          "rationale": "Small context now, detail recoverable later."
+        }
+      ]
+    },
+    {
+      "id": "a-5-5-001",
+      "subskill": "5.5",
+      "tags": "CCAR-F DRILL",
+      "scenario": "Date extraction is 93% accurate overall but only 68% on handwritten forms; typed forms are 97%.",
+      "stem": "What review policy follows?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Random review sized to the 93% overall accuracy.",
+          "correct": false,
+          "rationale": "Treats the weak segment like the rest."
+        },
+        {
+          "letter": "B",
+          "text": "Manual entry for every date, retire the model for this field.",
+          "correct": false,
+          "rationale": "Throws away the 97% segment."
+        },
+        {
+          "letter": "C",
+          "text": "Route handwritten-form dates to a human; let typed-form dates through unreviewed.",
+          "correct": true,
+          "rationale": "Review follows the weak segment."
+        },
+        {
+          "letter": "D",
+          "text": "Prompt the model to assume DD/MM and release unreviewed.",
+          "correct": false,
+          "rationale": "A guess released without review."
+        }
+      ]
+    },
+    {
+      "id": "a-5-2-001",
+      "subskill": "5.2",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A customer says twice, \"I want to speak to a person about my invoice.\" The agent's first reply tried to fix the invoice.",
+      "stem": "What should the agent do next?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "Offer a discount, then escalate if declined.",
+          "correct": false,
+          "rationale": "Ignores the explicit request."
+        },
+        {
+          "letter": "B",
+          "text": "Ask what the issue is, then decide whether to escalate.",
+          "correct": false,
+          "rationale": "Interrogates instead of routing."
+        },
+        {
+          "letter": "C",
+          "text": "Transfer to a human now, passing the account and the issue so far.",
+          "correct": true,
+          "rationale": "An explicit request is honored immediately, with context."
+        },
+        {
+          "letter": "D",
+          "text": "Resolve the issue itself and mention a human is available.",
+          "correct": false,
+          "rationale": "Overrides what the customer said."
+        }
+      ]
+    },
+    {
+      "id": "a-1-6-001",
+      "subskill": "1.6",
+      "tags": "CCAR-F DRILL",
+      "scenario": "A fixed four-step chain for onboarding a new data source works until some sources need an unplanned authentication-mapping step discovered only while reading their docs.",
+      "stem": "What is the flaw?",
+      "selectCount": 1,
+      "options": [
+        {
+          "letter": "A",
+          "text": "The chain lacks a final validation step.",
+          "correct": false,
+          "rationale": "A fixed chain cannot absorb discovered steps; adding one stage does not change that."
+        },
+        {
+          "letter": "B",
+          "text": "The required steps depend on what the input contains, so the team needs adaptive decomposition.",
+          "correct": true,
+          "rationale": "Unpredictable subtasks mean orchestrator-style planning."
+        },
+        {
+          "letter": "C",
+          "text": "The model is too small to hold the chain.",
+          "correct": false,
+          "rationale": "Unrelated."
+        },
+        {
+          "letter": "D",
+          "text": "Add a seventh fixed step for the new case.",
+          "correct": false,
+          "rationale": "The next input will need an eighth."
+        }
+      ]
+    }
+  ]
+}
